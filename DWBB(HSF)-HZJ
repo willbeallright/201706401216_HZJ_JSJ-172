@@ -1,0 +1,35 @@
+import numpy as np
+import pandas as pd
+n,m=map(int, input("请输入物品数n和约束数m：").split())
+v1=list(map(float, input("输入n个物品价值：").split()))
+data1=[]
+for i in range(m):
+    i=int(i)
+    print("请输入第 %d 个属性："%(i+1),end='')
+    data2=list(map(int, input().split()))
+    data1.append(data2)
+data3= pd.DataFrame(data1)
+j=list(map(int, input("请输入m个约束值：").split()))
+data3['约束值']=j
+print(data3)
+
+
+v2=0
+v_max=v1[0]
+def f(i):
+    global v2,v_max
+    if i >n-1:
+        if v2>v_max:
+            v_max=v2
+    else:
+        v0=0
+        v0=(data3['约束值']-data3[i])>=0  
+        if v0.all():
+            data3['约束值']=data3['约束值']-data3[i] 
+            v2=v2+v1[i]
+            f(i+1)
+            v2=v2-v1[i]#要是到达叶子结点就开始回溯
+            data3['约束值']=data3['约束值']+data3[i]
+        f(i+1)
+f(0)
+print("最大价值为%d元"%v_max)
